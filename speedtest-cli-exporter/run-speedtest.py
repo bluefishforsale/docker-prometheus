@@ -7,9 +7,9 @@ from prometheus_client import start_http_server, Summary, Gauge
 from subprocess import PIPE, run
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--interval", default=300,
+parser.add_argument("-i", "--interval", type=int, default=300,
                     help="speedtest check interval")
-parser.add_argument("-p", "--port", default=9119,
+parser.add_argument("-p", "--port", type=int, default=9119,
                     help="port the http /metrics server will bind to")
 parser.add_argument("-s", "--servers", default=[], nargs='+',
                     help="list of server ids separated by spaces")
@@ -18,8 +18,8 @@ args = parser.parse_args()
 servers = args.servers
 test_interval = args.interval # initiate speed test every 60 seconds
 
-g_ping = Gauge('speedtest_ping', 'Ping Time')
-g_speed = Gauge('speedtest_speed', 'Speedtest Speed', ['direction', 'server_id', 'server_name', 'server_cc', 'server_sponsor'])
+#g_ping = Gauge('speedtest_ping', 'Ping Time', ['name', 'server_id', 'server_name', 'server_cc', 'server_sponsor'])
+gauge_speedtest = Gauge('speedtest_cli', 'Speedtest Run', ['name', 'server_id', 'server_name', 'server_cc', 'server_sponsor', 'server_distance'])
 
 def process_request(t):
   round_start = time.time()
@@ -34,13 +34,14 @@ def process_request(t):
     server_name=results_dict["server"]["name"]
     server_cc=results_dict["server"]["cc"]
     server_sponsor=results_dict["server"]["sponsor"]
+    server_distance=results_dict["server"]["d"]
     ping = results_dict["ping"]
     upload = results_dict["upload"]
     download = results_dict["download"]
 
-    g_ping.set(ping)
-    g_speed.labels(direction='upload', server_id=server_id, server_name=server_name, server_sponsor=server_sponsor, server_cc=server_cc).set(upload)
-    g_speed.labels(direction='download', server_id=server_id, server_name=server_name, server_sponsor=server_sponsor, server_cc=server_cc).set(download)
+    gauge_speedtest.labels(name='ping', server_id=server_id, server_name=server_name, server_sponsor=server_sponsor, server_cc=server_cc, server_distance=server_distance).set(ping)
+    gauge_speedtest.labels(name='upload', server_id=server_id, server_name=server_name, server_sponsor=server_sponsor, server_cc=server_cc, server_distance=server_distance).set(upload)
+    gauge_speedtest.labels(name='download', server_id=server_id, server_name=server_name, server_sponsor=server_sponsor, server_cc=server_cc, server_distance=server_distance).set(download)
 
     iter_t = (time.time() - start)
     time.sleep(t / (len(servers)*iter_t))
@@ -55,7 +56,7 @@ if __name__ == '__main__':
   # Generate some requests.
   while True:
     try:
-      process_request(test_interval)
+      process_request(args.interval)
     except TypeError:
       print("TypeError returned from speedtest server")
     except socket.timeout:

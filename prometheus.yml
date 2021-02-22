@@ -42,3 +42,48 @@ scrape_configs:
   - job_name: 'tautulli-exporter'
     static_configs:
     - targets: ['192.168.1.143:8913']
+
+  - job_name: 'speedtest-exporter'
+    scrape_interval: 5m
+    scrape_timeout: 4m
+    static_configs:
+    - targets: ['192.168.1.143:9119']
+
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [icmp,http]
+    scrape_interval: 10s
+
+    static_configs:
+      - targets:
+        # DNS providers
+        - 1.0.0.1
+        - 1.1.1.1
+        - 8.8.4.4
+        - 8.8.8.8
+        # XFinityNextHop
+        - nexthop.anarc.at
+        # hardcoded in DNS
+        - cloudflare.com
+        - quizlet.com
+        - terrac.com
+        - el.quizlet.com
+        - github.com
+        - docker.com
+        - reddit.com
+        - netflix.com
+        - amazon.com
+        - www.telefonica.de
+        - cixp.web.cern.ch
+        - www.sbb.ch
+        - cam.ac.uk
+        - web.mit.edu
+
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 192.168.1.143:9115  # The blackbox exporter's real hostname:port.

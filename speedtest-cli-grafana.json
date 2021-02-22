@@ -1,0 +1,100 @@
+{
+  "datasource": "Prometheus",
+  "aliasColors": {},
+  "bars": false,
+  "dashLength": 10,
+  "dashes": false,
+  "fill": 5,
+  "fillGradient": 5,
+  "gridPos": {
+    "h": 5,
+    "w": 10,
+    "x": 14,
+    "y": 0
+  },
+  "id": 8,
+  "legend": {
+    "alignAsTable": true,
+    "avg": false,
+    "current": true,
+    "hideEmpty": true,
+    "hideZero": true,
+    "max": false,
+    "min": false,
+    "rightSide": true,
+    "show": true,
+    "sideWidth": 200,
+    "sort": "current",
+    "sortDesc": true,
+    "total": false,
+    "values": true
+  },
+  "lines": true,
+  "linewidth": 1,
+  "nullPointMode": "null",
+  "options": {
+    "dataLinks": []
+  },
+  "percentage": false,
+  "pointradius": 2,
+  "points": false,
+  "renderer": "flot",
+  "repeatDirection": "v",
+  "seriesOverrides": [
+    {
+      "alias": "/Ping/",
+      "yaxis": 2
+    }
+  ],
+  "spaceLength": 10,
+  "stack": false,
+  "steppedLine": false,
+  "targets": [
+    {
+      "expr": "speedtest_cli",
+      "legendFormat": "{{name}} {{server_sponsor}} {{server_name}}",
+      "refId": "A"
+    }
+  ],
+  "thresholds": [],
+  "timeFrom": null,
+  "timeRegions": [],
+  "timeShift": null,
+  "title": "Speedtest.net Up/Down Rate",
+  "tooltip": {
+    "shared": true,
+    "sort": 2,
+    "value_type": "individual"
+  },
+  "transparent": true,
+  "type": "graph",
+  "xaxis": {
+    "buckets": null,
+    "mode": "time",
+    "name": null,
+    "show": true,
+    "values": []
+  },
+  "yaxes": [
+    {
+      "format": "Bps",
+      "label": null,
+      "logBase": 1,
+      "max": null,
+      "min": null,
+      "show": true
+    },
+    {
+      "format": "short",
+      "label": null,
+      "logBase": 1,
+      "max": null,
+      "min": null,
+      "show": false
+    }
+  ],
+  "yaxis": {
+    "align": false,
+    "alignLevel": null
+  }
+}
