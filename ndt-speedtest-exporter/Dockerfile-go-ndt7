@@ -1,0 +1,16 @@
+FROM golang:buster
+
+RUN apt-get update
+RUN apt-get install -y python3-pip python3 git
+RUN pip3 install prometheus-client
+
+ENV GO111MODULE=on
+RUN go get -v github.com/m-lab/ndt7-client-go/cmd/ndt7-client
+
+RUN apt-get clean &&\
+    rm -rf /tmp/*
+
+RUN mkdir /app
+COPY run-speedtest.py /app/
+
+ENTRYPOINT [ "/app/run-speedtest.py" ]
