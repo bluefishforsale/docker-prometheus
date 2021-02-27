@@ -17,4 +17,5 @@ sudo docker run -d \
   --hostname=${HOSTNAME} \
   -e TAUTULLI_API_KEY="${TAUTULLI_API_KEY}" \
   -e TAUTULLI_URI="${TAUTULLI_URI}" \
+  -e TAUTULLI_TIMEOUT=60 \
   ${IMAGE}:${VERSION}

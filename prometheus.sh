@@ -40,7 +40,9 @@ sudo docker run -d \
   --cap-add SYS_ADMIN \
   --cap-add NET_ADMIN \
   -v "/:/host:ro,rslave" \
+  -v "${LOCALDIR}/node_exporter/text_files:/text_files" \
   --privileged \
   ${NODEIMAGE}:${NODEVERSION} \
-    --log.level=debug \
-    --path.rootfs=/host
+    --log.level=info \
+    --path.rootfs=/host \
+    --collector.textfile.directory=/text_files
