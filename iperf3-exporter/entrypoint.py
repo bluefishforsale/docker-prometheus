@@ -15,6 +15,8 @@ parser.add_argument("-t", "--test_time", type=int, default=10,
                     help="how long for each test to run")
 parser.add_argument("-P", "--parallel", type=int, default=1,
                     help="number of simultaneous streams per test")
+parser.add_argument("-p", "--port", type=int, default=9150,
+                    help="port for exporter service to run on")
 parser.add_argument("-s", "--servers", default=[], nargs='+',
         help="list of servers<:port> separated by spaces. Port defaults to 5201 if not specified")
 args = parser.parse_args()
@@ -25,7 +27,7 @@ test_time = args.test_time
 parallel = args.parallel
 servers = args.servers
 
-gauge_iperf = Gauge('iperf3', 'iPerf3 metrics', ['name',])
+gauge_iperf = Gauge('iperf3', 'iPerf3 metrics', ['name', 'server'])
 
 def process_request(t):
   round_start = time.time()
@@ -48,10 +50,12 @@ def process_request(t):
     _port=results_dict["start"]["connecting_to"]["port"]
 
     _download=results_dict["end"]["sum_received"]["bits_per_second"]
+    _download=results_dict["end"]["sum_sent"]["bits_per_second"]
     _congestion=results_dict["end"]["sender_tcp_congestion"]
 
-    gauge_speedtest.labels(name='ping',     remote=_host, ).set(_ping)
-    gauge_speedtest.labels(name='download', remote=_host, ).set(_download)
+    gauge_speedtest.labels(name='ping',     server=_host, ).set(_ping)
+    gauge_speedtest.labels(name='download', server=_host, ).set(_download)
+    gauge_speedtest.labels(name='download', server=_host, ).set(_download)
 
     iter_t = (time.time() - start)
     time.sleep(t / (len(servers)*iter_t))

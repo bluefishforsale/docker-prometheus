@@ -25,6 +25,7 @@ sudo docker run -d \
   -v ${LOCALDIR}/data:/prometheus/data \
   ${PROMIMAGE}:${PROMVERSION} \
     --config.file=/config/prometheus.yml \
+    --storage.tsdb.retention.time=90d \
     --log.level=debug
 
 
@@ -45,4 +46,9 @@ sudo docker run -d \
   ${NODEIMAGE}:${NODEVERSION} \
     --log.level=info \
     --path.rootfs=/host \
+    --collector.zfs \
+    --collector.nfsd \
+    --collector.thermal_zone \
+    --collector.netstat \
+    --collector.perf.cpus=1-16 \
     --collector.textfile.directory=/text_files
