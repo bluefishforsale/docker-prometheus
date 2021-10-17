@@ -16,7 +16,7 @@ docker rm -f ${PROM} ${NODE}
 # PROM
 sudo docker run -d \
   -p 9090:9090 \
-  --dns 192.168.1.1 \
+  --dns 192.168.1.2 \
   --dns-search local \
   --restart=always \
   --name=${PROM} \
@@ -33,7 +33,7 @@ sudo docker run -d \
 sudo docker run -d \
   --net=host \
   --pid=host \
-  --dns 192.168.1.1 \
+  --dns 192.168.1.2 \
   --dns-search local \
   --restart=always \
   --name=${NODE} \

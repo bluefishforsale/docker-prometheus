@@ -9,7 +9,7 @@ docker rm -f ${SERVICE}
 sudo docker run -d \
   -p 9150:9254 \
   --privileged \
-  --dns 192.168.1.1 \
+  --dns 192.168.1.2 \
   --dns-search local \
   --restart=always \
   --name=${SERVICE} \
